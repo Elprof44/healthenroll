@@ -7,27 +7,34 @@ generator client {
   provider = "prisma-client-js"
 }
 
-model User {
-  id            Int       @id @default(autoincrement())
-  name          String?
-  email         String    @unique
-  emailVerified DateTime?
-  password      String
-  roles         Role[]
-  posts         Post[]
+model Patient {
+  patientId          String       @id @default(cuid())
+  firstName          String
+  lastName           String
+  dateOfBirth        String
+  ID                 String       @unique
+  patientGender      String
+  address            String
+  phoneNumber        String       @unique
+  emailAddress       String?      @unique
+  currentMedications String?
+  bloodGroup         String
+  country            String
+  profession         String?
+  createdAt          DateTime     @default(now())
+  updatedAt          DateTime     @updatedAt
+  enrolledById       Professional @relation(fields: [professionalId], references: [id])
+  professionalId     String
 }
 
-model Role {
-  id    Int    @id @default(autoincrement())
-  name  String @unique
-  users User[]
-}
-
-model Post {
-  id       Int     @id @default(autoincrement())
-  title    String
-  content  String
-  image    String?
-  authorId Int
-  author   User    @relation(fields: [authorId], references: [id])
+model Professional {
+  id        String    @id @default(cuid())
+  name      String
+  email     String    @unique
+  password  String
+  role      String    @default("user")
+  specialty String?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  patients  Patient[]
 }
